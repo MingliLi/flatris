@@ -59,6 +59,7 @@ var Flatris = {
     LEFT: 37,
     RIGHT: 39
   },
+  components: {},
   attachPointerDownEvent: function(eventHandler) {
     if (this.isMobileDevice()) {
       return {onTouchStart: eventHandler};
@@ -80,123 +81,13 @@ var Flatris = {
 
 /** @jsx React.DOM */
 
-Cosmos.components.FlatrisStatePersistor = React.createClass({displayName: 'FlatrisStatePersistor',
-  /**
-   * Persist Flatris state with local storage.
-   */
-  mixins: [Cosmos.mixins.PersistState],
-
-  children: {
-    flatrisStatePreview: function() {
-      // Unload previous state from local storage if present, otherwise
-      // generate a blank Flatris instance
-      var prevState = localStorage.getItem('flatrisState');
-      if (prevState) {
-        return JSON.parse(prevState);
-      } else {
-        return {
-          component: 'FlatrisStatePreview'
-        };
-      }
-    }
-  },
-
-  render: function() {
-    return this.loadChild('flatrisStatePreview');
-  },
-
-  componentDidMount: function() {
-    $(window).on('unload', this.onUnload);
-  },
-
-  componentWillUnmount: function() {
-    $(window).off('unload', this.onUnload);
-  },
-
-  onUnload: function() {
-    var snapshot = this.refs.flatrisStatePreview.generateSnapshot(true);
-    localStorage.setItem('flatrisState', JSON.stringify(snapshot));
-  }
-});
-
-/** @jsx React.DOM */
-
-Cosmos.components.FlatrisStatePreview = React.createClass({displayName: 'FlatrisStatePreview',
-  /**
-   * Render a Flatris instance next to its prettified, serialized state
-   */
-  mixins: [Cosmos.mixins.PersistState],
-
-  getInitialState: function() {
-    return {
-      shapshot: '{}'
-    };
-  },
-
-  children: {
-    flatris: function() {
-      return {
-        component: 'Flatris'
-      };
-    }
-  },
-
-  render: function() {
-    return (
-      React.DOM.div( {className:"flatris-state-preview"}, 
-        this.loadChild('flatris'),
-        React.DOM.pre( {className:"state-preview"}, this.state.snapshot)
-      )
-    );
-  },
-
-  componentDidMount: function() {
-    this.refreshSnapshot();
-    this._intervalId = setInterval(this.refreshSnapshot, 200);
-  },
-
-  shouldComponentUpdate: function(nextProps, nextState) {
-    // No need to render for an identical snapshot
-    return nextState.snapshot != this.state.snapshot;
-  },
-
-  componentWillUnmount: function() {
-    clearInterval(this._intervalId);
-  },
-
-  refreshSnapshot: function() {
-    this.setState({
-      snapshot: this.serializeState(this.refs.flatris.generateSnapshot(true))
-    });
-  },
-
-  serializeState: function(snapshot) {
-    /**
-     * This ugly method styles the indenting of the stringified state JSON.
-     */
-    var snapshot = JSON.stringify(snapshot, null, '  ');
-    // Style the Well and the active Tetrimino grid with one row per line
-    snapshot = snapshot.replace(/\n([\s]+)"grid"\: ([\s\S]+?)\]([\s]+)\]/g,
-      function(match, indent, grid, after) {
-        grid = grid.replace(new RegExp('\\[\n' + indent + '    ', 'g'), '[');
-        grid = grid.replace(new RegExp(',\n' + indent + '    ', 'g'), ', ');
-        grid = grid.replace(new RegExp('\n' + indent + '  (\\]|$)', 'g'), '$1');
-        return '\n' + indent + '"grid": ' + grid + ']' + after + ']';
-      }
-    );
-    return snapshot;
-  }
-});
-
-/** @jsx React.DOM */
-
-Cosmos.components.Flatris = React.createClass({displayName: 'Flatris',
+Flatris.components.FlatrisGame = React.createClass({displayName: 'FlatrisGame',
   /**
    * The Tetris game was originally designed and programmed by Alexey Pajitnov.
    * It was released on June 6, 1984 and has since become a world-wide
    * phenomenon. Read more about the game at http://en.wikipedia.org/wiki/Tetris
    */
-  mixins: [Cosmos.mixins.PersistState],
+  mixins: [Cosmos.mixins.ComponentTree],
 
   getInitialState: function() {
     return _.extend(this.getNewGameDefaults(), {
@@ -238,7 +129,7 @@ Cosmos.components.Flatris = React.createClass({displayName: 'Flatris',
         onPressResume: this.resume
       };
     },
-    
+
     infoPanel: function() {
       return {
         component: 'InfoPanel'
@@ -248,7 +139,7 @@ Cosmos.components.Flatris = React.createClass({displayName: 'Flatris',
 
   render: function() {
     return (
-      React.DOM.div( {className:"flatris"}, 
+      React.DOM.div( {className:"flatris-game"}, 
         this.loadChild('well'),
         this.renderInfoPanel(),
         this.loadChild('gamePanel'),
@@ -439,14 +330,124 @@ Cosmos.components.Flatris = React.createClass({displayName: 'Flatris',
 
 /** @jsx React.DOM */
 
-Cosmos.components.GamePanel = React.createClass({displayName: 'GamePanel',
+Flatris.components.FlatrisStatePersistor = React.createClass({displayName: 'FlatrisStatePersistor',
+  /**
+   * Persist Flatris state with local storage.
+   */
+  mixins: [Cosmos.mixins.ComponentTree],
+
+  children: {
+    flatrisStatePreview: function() {
+      // Unload previous state from local storage if present, otherwise
+      // generate a blank Flatris instance
+      var prevState = localStorage.getItem('flatrisState');
+      if (prevState) {
+        return JSON.parse(prevState);
+      } else {
+        return {
+          component: 'FlatrisStatePreview'
+        };
+      }
+    }
+  },
+
+  render: function() {
+    return this.loadChild('flatrisStatePreview');
+  },
+
+  componentDidMount: function() {
+    $(window).on('unload', this.onUnload);
+  },
+
+  componentWillUnmount: function() {
+    $(window).off('unload', this.onUnload);
+  },
+
+  onUnload: function() {
+    var snapshot = this.refs.flatrisStatePreview.serialize(true);
+    localStorage.setItem('flatrisState', JSON.stringify(snapshot));
+  }
+});
+
+/** @jsx React.DOM */
+
+Flatris.components.FlatrisStatePreview = React.createClass({displayName: 'FlatrisStatePreview',
+  /**
+   * Render a Flatris instance next to its prettified, serialized state
+   */
+  mixins: [Cosmos.mixins.ComponentTree],
+
+  getInitialState: function() {
+    return {
+      snapshot: '{}'
+    };
+  },
+
+  children: {
+    flatris: function() {
+      return {
+        component: 'FlatrisGame'
+      };
+    }
+  },
+
+  render: function() {
+    return (
+      React.DOM.div( {className:"flatris-state-preview"}, 
+        this.loadChild('flatris'),
+        React.DOM.pre( {className:"state-preview"}, this.state.snapshot)
+      )
+    );
+  },
+
+  componentDidMount: function() {
+    this.refreshSnapshot();
+    this._intervalId = setInterval(this.refreshSnapshot, 200);
+  },
+
+  shouldComponentUpdate: function(nextProps, nextState) {
+    // No need to render for an identical snapshot
+    return nextState.snapshot != this.state.snapshot;
+  },
+
+  componentWillUnmount: function() {
+    clearInterval(this._intervalId);
+  },
+
+  refreshSnapshot: function() {
+    this.setState({
+      snapshot: this.serializeState(this.refs.flatris.serialize(true))
+    });
+  },
+
+  serializeState: function(snapshot) {
+    /**
+     * This ugly method styles the indenting of the stringified state JSON.
+     */
+    var snapshot = JSON.stringify(snapshot, null, '  ');
+    // Style the Well and the active Tetrimino grid with one row per line
+    snapshot = snapshot.replace(/\n([\s]+)"grid"\: ([\s\S]+?)\]([\s]+)\]/g,
+      function(match, indent, grid, after) {
+        grid = grid.replace(new RegExp('\\[\n' + indent + '    ', 'g'), '[');
+        grid = grid.replace(new RegExp(',\n' + indent + '    ', 'g'), ', ');
+        grid = grid.replace(new RegExp('\n' + indent + '  (\\]|$)', 'g'), '$1');
+        return '\n' + indent + '"grid": ' + grid + ']' + after + ']';
+      }
+    );
+    return snapshot;
+  }
+});
+
+/** @jsx React.DOM */
+
+Flatris.components.GamePanel = React.createClass({displayName: 'GamePanel',
   /**
    * The game panel contains
    * - the next Tetrimono to be inserted
    * - the score and lines cleared
    * - start or pause/resume controls
    */
-  mixins: [Cosmos.mixins.PersistState],
+  mixins: [Cosmos.mixins.ComponentTree],
 
   getDefaultProps: function() {
     return {
@@ -462,6 +463,7 @@ Cosmos.components.GamePanel = React.createClass({displayName: 'GamePanel',
     nextTetrimino: function(tetrimino) {
       return {
         component: 'Tetrimino',
+        key: tetrimino,
         color: Flatris.COLORS[tetrimino],
         state: {
           grid: Flatris.SHAPES[tetrimino]
@@ -510,7 +512,7 @@ Cosmos.components.GamePanel = React.createClass({displayName: 'GamePanel',
     }
     return React.DOM.button(Flatris.attachPointerDownEvent(eventHandler), label);
   },
-  
+
   getNextTetriminoClass: function() {
     var classes = ['next-tetrimino'];
     // We use this extra class to position tetriminos differently from CSS
@@ -524,7 +526,7 @@ Cosmos.components.GamePanel = React.createClass({displayName: 'GamePanel',
 
 /** @jsx React.DOM */
 
-Cosmos.components.InfoPanel = React.createClass({displayName: 'InfoPanel',
+Flatris.components.InfoPanel = React.createClass({displayName: 'InfoPanel',
   /**
    * Information panel for the Flatris game/Cosmos demo, shown in between game
    * states.
@@ -543,7 +545,7 @@ Cosmos.components.InfoPanel = React.createClass({displayName: 'InfoPanel',
 
 /** @jsx React.DOM */
 
-Cosmos.components.SquareBlock = React.createClass({displayName: 'SquareBlock',
+Flatris.components.SquareBlock = React.createClass({displayName: 'SquareBlock',
   /**
    * Building block for Tetriminos, occupying a 1x1 square block. The only
    * configurable property square blocks have is their color.
@@ -553,7 +555,7 @@ Cosmos.components.SquareBlock = React.createClass({displayName: 'SquareBlock',
       color: Flatris.COLORS.L
     };
   },
-  
+
   render: function() {
     return (
       React.DOM.div( {className:"square-block",
@@ -564,12 +566,12 @@ Cosmos.components.SquareBlock = React.createClass({displayName: 'SquareBlock',
 
 /** @jsx React.DOM */
 
-Cosmos.components.Tetrimino = React.createClass({displayName: 'Tetrimino',
+Flatris.components.Tetrimino = React.createClass({displayName: 'Tetrimino',
   /**
    * A tetromino is a geometric shape composed of four squares, connected
    * orthogonally. Read more at http://en.wikipedia.org/wiki/Tetromino
    */
-  mixins: [Cosmos.mixins.PersistState],
+  mixins: [Cosmos.mixins.ComponentTree],
 
   getDefaultProps: function() {
     return {
@@ -654,12 +656,12 @@ Cosmos.components.Tetrimino = React.createClass({displayName: 'Tetrimino',
 
 /** @jsx React.DOM */
 
-Cosmos.components.WellGrid = React.createClass({displayName: 'WellGrid',
+Flatris.components.WellGrid = React.createClass({displayName: 'WellGrid',
   /**
    * Matrix for the landed Tetriminos inside the Flatris Well. Isolated from
    * the Well component because it needs to update it state as
    */
-  mixins: [Cosmos.mixins.PersistState],
+  mixins: [Cosmos.mixins.ComponentTree],
 
   getDefaultProps: function() {
     return {
@@ -849,7 +851,7 @@ Cosmos.components.WellGrid = React.createClass({displayName: 'WellGrid',
 
 /** @jsx React.DOM */
 
-Cosmos.components.Well = React.createClass({displayName: 'Well',
+Flatris.components.Well = React.createClass({displayName: 'Well',
   /**
    * A rectangular vertical shaft, where Tetriminos fall into during a Flatris
    * game. The Well has configurable size, speed. Tetrimino pieces can be
@@ -858,7 +860,7 @@ Cosmos.components.Well = React.createClass({displayName: 'Well',
    * line it will be cleared, emptying up space and allowing more pieces to
    * enter afterwards.
    */
-  mixins: [Cosmos.mixins.PersistState,
+  mixins: [Cosmos.mixins.ComponentTree,
            Cosmos.mixins.AnimationLoop],
 
   getDefaultProps: function() {

@@ -1,29 +1,128 @@
-* {
-  margin: 0;
-  padding: 0;
+/* Flatris expects a 480 width viewport */
+.flatris-game {
+  position: relative;
+  width: 480px;
+  height: 680px;
+  margin: 30px auto 30px auto;
 }
-body {
+.flatris-game .well {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 600px;
+  background: #ecf0f1;
+}
+.flatris-game .info-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 270px;
+  height: 600px;
+  padding: 0 15px;
+  background: rgba(236, 240, 241, 0.8);
+}
+.flatris-game .info-panel .headline {
+  margin-bottom: 30px;
+  font-size: 18px;
+  line-height: 26px;
+}
+.flatris-game .game-panel {
+  position: absolute;
+  top: 0;
+  bottom: 80px;
+  left: 300px;
+  right: 0;
+  padding: 0 30px;
+}
+.flatris-game .game-panel p {
+  line-height: 1em;
+}
+.flatris-game .game-panel .title {
+  margin: 30px 0 0 0;
+  color: #34495f;
+  font-size: 40px;
+  font-weight: normal;
+  line-height: 60px;
+}
+.flatris-game .game-panel .label {
+  margin: 30px 0 0 0;
+  color: #bdc3c7;
+  font-weight: 300;
+}
+.flatris-game .game-panel .count {
+  margin: 5px 0 0 0;
+  color: #3993d0;
+  font-size: 30px;
+  font-weight: normal;
+}
+.flatris-game .game-panel .next-tetrimino {
+  width: 120px;
+  height: 120px;
+  margin: 10px 0 0 0;
+  /* The I Tetrimino needs to be lifted a bit because it has an empty row
+      in its default position */
+}
+.flatris-game .game-panel .next-tetrimino .square-block {
+  /* Override any color the next Tetrimino has for a gray shape */
+  background-color: #ecf0f1 !important;
+}
+.flatris-game .game-panel .next-tetrimino.next-tetrimino-I {
+  margin-top: -20px;
+}
+.flatris-game .game-panel button {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  right: 30px;
+  width: 120px;
+}
+.flatris-game .controls {
+  position: absolute;
+  top: 600px;
+  left: 0;
+  height: 80px;
+}
+.flatris-game .controls button {
+  float: left;
+  width: 60px;
+  margin: 20px 20px 0 0;
+  background: #ecf0f1;
+  color: #34495f;
+  font-size: 24px;
+}
+
+.flatris-state-preview .state-preview {
+  padding: 15px;
+  background: #34495f;
+  color: #ecf0f1;
+  font-family: Monaco, "Lucida Console", monospace;
+  font-size: 14px;
+  overflow: scroll;
+}
+
+.flatris {
   background: #fff;
   color: #34495f;
   font-family: Helvetica, Arial, sans-serif;
   font-size: 14px;
 }
-ul {
+.flatris ul {
   list-style-type: none;
 }
-p {
+.flatris p {
   margin: 15px 0;
   line-height: 20px;
 }
-a {
+.flatris a {
   color: #34495f;
   font-weight: bold;
   text-decoration: none;
 }
-a:hover {
+.flatris a:hover {
   text-decoration: underline;
 }
-button {
+.flatris button {
   display: block;
   border: 0;
   height: 60px;
@@ -37,98 +136,9 @@ button {
   cursor: pointer;
 }
 
-/* Flatris expects a 480 width viewport */
-.flatris {
-  position: relative;
-  width: 480px;
-  height: 680px;
-  margin: 30px auto 30px auto;
-}
-.flatris .well {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 300px;
-  height: 600px;
-  background: #ecf0f1;
-}
-.flatris .info-panel {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 270px;
-  height: 600px;
-  padding: 0 15px;
-  background: rgba(236, 240, 241, 0.8);
-}
-.flatris .info-panel .headline {
-  margin-bottom: 30px;
-  font-size: 18px;
-  line-height: 26px;
-}
-.flatris .game-panel {
-  position: absolute;
-  top: 0;
-  bottom: 80px;
-  left: 300px;
-  right: 0;
-  padding: 0 30px;
-}
-.flatris .game-panel p {
-  line-height: 1em;
-}
-.flatris .game-panel .title {
-  margin: 30px 0 0 0;
-  color: #34495f;
-  font-size: 40px;
-  font-weight: normal;
-  line-height: 60px;
-}
-.flatris .game-panel .label {
-  margin: 30px 0 0 0;
-  color: #bdc3c7;
-  font-weight: 300;
-}
-.flatris .game-panel .count {
-  margin: 5px 0 0 0;
-  color: #3993d0;
-  font-size: 30px;
-  font-weight: normal;
-}
-.flatris .game-panel .next-tetrimino {
-  width: 120px;
-  height: 120px;
-  margin: 10px 0 0 0;
-  /* The I Tetrimino needs to be lifted a bit because it has an empty row
-      in its default position */
-}
-.flatris .game-panel .next-tetrimino .square-block {
-  /* Override any color the next Tetrimino has for a gray shape */
-  background-color: #ecf0f1 !important;
-}
-.flatris .game-panel .next-tetrimino.next-tetrimino-I {
-  margin-top: -20px;
-}
-.flatris .game-panel button {
-  position: absolute;
-  bottom: 30px;
-  left: 30px;
-  right: 30px;
-  width: 120px;
-}
-.flatris .controls {
-  position: absolute;
-  top: 600px;
-  left: 0;
-  height: 80px;
-}
-.flatris .controls button {
-  float: left;
-  width: 60px;
-  margin: 20px 20px 0 0;
-  background: #ecf0f1;
-  color: #34495f;
-  font-size: 24px;
+* {
+  margin: 0;
+  padding: 0;
 }
 
 .square-block {
@@ -142,15 +152,6 @@ beneath them */
   -webkit-transition: top 0.1s linear;
   -moz-transition: top 0.1s linear;
   transition: top 0.1s linear;
-}
-
-.state-preview {
-  padding: 15px;
-  background: #34495f;
-  color: #ecf0f1;
-  font-family: Monaco, "Lucida Console", monospace;
-  font-size: 14px;
-  overflow: scroll;
 }
 
 .tetrimino {
