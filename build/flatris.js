@@ -373,7 +373,7 @@ Flatris.components.FlatrisStatePersistor = React.createClass({displayName: 'Flat
 
 Flatris.components.FlatrisStatePreview = React.createClass({displayName: 'FlatrisStatePreview',
   /**
-   * Render a Flatris instance next to its prettified, serialized state
+   * Render a Flatris instance next to its prettified, serialized state.
    */
   mixins: [Cosmos.mixins.ComponentTree],
 
@@ -442,10 +442,10 @@ Flatris.components.FlatrisStatePreview = React.createClass({displayName: 'Flatri
 
 Flatris.components.GamePanel = React.createClass({displayName: 'GamePanel',
   /**
-   * The game panel contains
-   * - the next Tetrimono to be inserted
-   * - the score and lines cleared
-   * - start or pause/resume controls
+   * The game panel contains:
+   * - The next Tetrimono to be inserted
+   * - The score and lines cleared
+   * - Start or pause/resume controls
    */
   mixins: [Cosmos.mixins.ComponentTree],
 
@@ -534,10 +534,10 @@ Flatris.components.InfoPanel = React.createClass({displayName: 'InfoPanel',
   render: function() {
     return (
       React.DOM.div( {className:"info-panel"}, 
-        React.DOM.p( {className:"headline"}, React.DOM.em(null, "Flatris"), " is demo app for the ", React.DOM.a( {href:"https://github.com/skidding/cosmos"}, "Cosmos"), " JavaScript user interface framework, built using ", React.DOM.a( {href:"https://github.com/facebook/react"}, "React"), " components."),
+        React.DOM.p( {className:"large-text"}, "Flatris is demo app for the ", React.DOM.a( {href:"https://github.com/skidding/cosmos"}, "Cosmos"), " JavaScript user interface framework, built using ", React.DOM.a( {href:"https://github.com/facebook/react"}, "React"), " components."),
         React.DOM.p(null, "Inspired by the classic ", React.DOM.a( {href:"http://en.wikipedia.org/wiki/Tetris"}, "Tetris"), " game, the game can be played both with a keyboard using the arrow keys, and on mobile devices using the buttons below."),
         React.DOM.p(null, "Because Cosmos can serialize the entire state of an application at any given time, Flatris stores your game state into the browser local storage when you close the tab and resumes playing whenever you return. Try a hard-refresh in the middle of a game."),
-        React.DOM.p(null, "The project source has under 1k lines of JS code and is open source on ", React.DOM.a( {href:"https://github.com/skidding/flatris"}, "GitHub."))
+        React.DOM.p( {className:"large-text"}, "The project source has ~1k lines of JS code and is open source on ", React.DOM.a( {href:"https://github.com/skidding/flatris"}, "GitHub."))
       )
     );
   }
@@ -547,8 +547,9 @@ Flatris.components.InfoPanel = React.createClass({displayName: 'InfoPanel',
 
 Flatris.components.SquareBlock = React.createClass({displayName: 'SquareBlock',
   /**
-   * Building block for Tetriminos, occupying a 1x1 square block. The only
-   * configurable property square blocks have is their color.
+   * Building block for Tetriminos and the grid of the Well, occupying a 1x1
+   * square block. The only configurable property square blocks have is their
+   * color.
    */
   getDefaultProps: function() {
     return {
@@ -568,7 +569,7 @@ Flatris.components.SquareBlock = React.createClass({displayName: 'SquareBlock',
 
 Flatris.components.Tetrimino = React.createClass({displayName: 'Tetrimino',
   /**
-   * A tetromino is a geometric shape composed of four squares, connected
+   * A Tetromino is a geometric shape composed of four squares, connected
    * orthogonally. Read more at http://en.wikipedia.org/wiki/Tetromino
    */
   mixins: [Cosmos.mixins.ComponentTree],
@@ -658,8 +659,7 @@ Flatris.components.Tetrimino = React.createClass({displayName: 'Tetrimino',
 
 Flatris.components.WellGrid = React.createClass({displayName: 'WellGrid',
   /**
-   * Matrix for the landed Tetriminos inside the Flatris Well. Isolated from
-   * the Well component because it needs to update it state as
+   * Isolated matrix for the landed Tetriminos inside the Well.
    */
   mixins: [Cosmos.mixins.ComponentTree],
 
@@ -854,11 +854,11 @@ Flatris.components.WellGrid = React.createClass({displayName: 'WellGrid',
 Flatris.components.Well = React.createClass({displayName: 'Well',
   /**
    * A rectangular vertical shaft, where Tetriminos fall into during a Flatris
-   * game. The Well has configurable size, speed. Tetrimino pieces can be
-   * inserted inside the well and they will fall until they hit the bottom,
-   * continuously filling it. Whenever the pieces form a straight horizontal
-   * line it will be cleared, emptying up space and allowing more pieces to
-   * enter afterwards.
+   * game. The Well has configurable size and speed. Tetrimino pieces can be
+   * inserted inside the well and they will fall until they hit the bottom, and
+   * eventually fill it. Whenever the pieces form a straight horizontal line it
+   * will be cleared, emptying up space and allowing more pieces to enter
+   * afterwards.
    */
   mixins: [Cosmos.mixins.ComponentTree,
            Cosmos.mixins.AnimationLoop],

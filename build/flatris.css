@@ -19,13 +19,7 @@
   left: 0;
   width: 270px;
   height: 600px;
-  padding: 0 15px;
-  background: rgba(236, 240, 241, 0.8);
-}
-.flatris-game .info-panel .headline {
-  margin-bottom: 30px;
-  font-size: 18px;
-  line-height: 26px;
+  background: rgba(236, 240, 241, 0.85);
 }
 .flatris-game .game-panel {
   position: absolute;
@@ -33,49 +27,6 @@
   bottom: 80px;
   left: 300px;
   right: 0;
-  padding: 0 30px;
-}
-.flatris-game .game-panel p {
-  line-height: 1em;
-}
-.flatris-game .game-panel .title {
-  margin: 30px 0 0 0;
-  color: #34495f;
-  font-size: 40px;
-  font-weight: normal;
-  line-height: 60px;
-}
-.flatris-game .game-panel .label {
-  margin: 30px 0 0 0;
-  color: #bdc3c7;
-  font-weight: 300;
-}
-.flatris-game .game-panel .count {
-  margin: 5px 0 0 0;
-  color: #3993d0;
-  font-size: 30px;
-  font-weight: normal;
-}
-.flatris-game .game-panel .next-tetrimino {
-  width: 120px;
-  height: 120px;
-  margin: 10px 0 0 0;
-  /* The I Tetrimino needs to be lifted a bit because it has an empty row
-      in its default position */
-}
-.flatris-game .game-panel .next-tetrimino .square-block {
-  /* Override any color the next Tetrimino has for a gray shape */
-  background-color: #ecf0f1 !important;
-}
-.flatris-game .game-panel .next-tetrimino.next-tetrimino-I {
-  margin-top: -20px;
-}
-.flatris-game .game-panel button {
-  position: absolute;
-  bottom: 30px;
-  left: 30px;
-  right: 30px;
-  width: 120px;
 }
 .flatris-game .controls {
   position: absolute;
@@ -134,6 +85,60 @@
   line-height: 60px;
   outline: none;
   cursor: pointer;
+}
+
+.game-panel {
+  padding: 0 30px;
+}
+.game-panel p {
+  line-height: 1em;
+}
+.game-panel .title {
+  margin: 30px 0 0 0;
+  color: #34495f;
+  font-size: 40px;
+  font-weight: normal;
+  line-height: 60px;
+}
+.game-panel .label {
+  margin: 30px 0 0 0;
+  color: #bdc3c7;
+  font-weight: 300;
+}
+.game-panel .count {
+  margin: 5px 0 0 0;
+  color: #3993d0;
+  font-size: 30px;
+  font-weight: normal;
+}
+.game-panel .next-tetrimino {
+  width: 120px;
+  height: 120px;
+  margin: 10px 0 0 0;
+  /* The I Tetrimino needs to be lifted a bit because it has an empty row
+    in its default position */
+}
+.game-panel .next-tetrimino .square-block {
+  /* Override any color the next Tetrimino has for a gray shape */
+  background-color: #ecf0f1 !important;
+}
+.game-panel .next-tetrimino.next-tetrimino-I {
+  margin-top: -20px;
+}
+.game-panel button {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  width: 120px;
+}
+
+.info-panel {
+  padding: 0 15px;
+}
+.info-panel .large-text {
+  margin: 30px 0;
+  font-size: 18px;
+  line-height: 26px;
 }
 
 * {
