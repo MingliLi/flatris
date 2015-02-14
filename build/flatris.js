@@ -861,7 +861,7 @@ Flatris.components.Well = React.createClass({displayName: 'Well',
    * afterwards.
    */
   mixins: [Cosmos.mixins.ComponentTree,
-           Cosmos.mixins.AnimationLoop],
+           AnimationLoopMixin],
 
   getDefaultProps: function() {
     return {
